@@ -1,3 +1,2 @@
-### Guess the word in Korean!
-#### Project description
+#### Guess the word in Korean!
 Enter Korean words until you guess the answer
