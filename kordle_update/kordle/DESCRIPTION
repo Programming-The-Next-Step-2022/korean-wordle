@@ -1,0 +1,15 @@
+Package: kordle
+Title: Korean Wordle
+Version: 0.0.1
+Authors@R: 
+    person("Emilija", "Kazakaityte", , "e.kazakaityte@gmail.com", role = c("aut", "cre"),
+           comment = c(ORCID = "YOUR-ORCID-ID"))
+Description: Based on Wordle, Kordle takes in guess words in Korean until the target
+              word is guessed. It provides feedback on guesses and gives word translation.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.2
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
