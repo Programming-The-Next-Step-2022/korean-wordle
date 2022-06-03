@@ -1,1 +1,3 @@
 # korean-wordle
+
+wordle
