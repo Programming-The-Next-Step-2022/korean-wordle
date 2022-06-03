@@ -1,0 +1,129 @@
+---
+title: "kordle"
+author: "by Emilija"
+date: "June 3rd, 2022"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{my-vignette}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+### *kordle* - guess the word in Korean!
+
+A couple months ago, there was a surge of popularity in playing
+[Wordle](https://www.nytimes.com/games/wordle/index.html),a game where
+you have only a few tries to guess the word. Although there
+are a couple Korean versions of the game, they are not implemented in R.
+
+The package *kordle* allows to play the word guessing game by using RShiny.
+There are three functions from *kordle* that RShiny app calls.
+
+### How *kordle* works
+
+```{r setup,include=F}
+library(kordle)
+source('C:/Users/Emilija/Desktop/r_dir/kordle/kordle/wordlist.R',
+         encoding = 'utf-8')
+Sys.setlocale("LC_ALL", "Korean")
+```
+
+First, the target word is chosen randomly from the pre-made wordlist.
+
+```{r}
+target_word <- sample(wordlist$hangeul,1)
+target_word
+```
+Since Korean words are made up of character blocks, it is hard, if not 
+impossible, to track back which characters were types to create the word.
+For example, as you type the word 'hi' (안녕), the individual characters (
+ㅇ ㅏ ㄴ ㄴ ㅕ ㅇ) will change their shape and position themselves to create
+the word itself.
+
+Therefore, each word in the list comes with associated characters and a
+translation:
+```{r}
+wordlist[wordlist$hangeul == target_word,c(1:6)]
+toString(wordlist[wordlist$hangeul == target_word,8])
+```
+
+Both target and guess words are passed to the function *compare_word*,
+which compares the individual characters from both words and gives feedback:
+
+1. **correct**, if the character is both correct and in the same position
+
+2. **close**, if the character is correct but in wrong position
+
+3. **nope**, if the character is not in target word
+
+```{r,eval=F}
+compare_word(
+    target = target_word,
+    guess = guess_word
+)
+compare_word('친구','단근')
+#>[1] "nope"    "nope"    "correct" "correct" "nope"    "close" 
+```
+
+Then, the output of *compare_word* is passed to the function *output_word*,
+which takes the labelled characters and prepares for the final output.
+This includes making sure the repeating characters are not marked twice and
+that the final output shows each individual character with/out brackets:
+
+1. **[]** brackets are put for **correct** characters
+
+2. **()** brackets are put for **close** characters
+
+3. No brackets are put for **nope** characters
+
+```{r,eval=F}
+output_word(
+    target = target_word,
+    guess = guess_word,
+    result = compare_word(target_word,guess_word)
+)
+#>[1] " \u3137  \u314f [\u3134][\u3131] \u3161  \u3134 "
+```
+
+With the encoding issues, the function output does not display nice results.
+However, when the function is used by RShiny App, it displays the words
+without any problems.
+
+The third function *translate_word* provides translation for the guess word:
+
+```{r,eval=F}
+translate_word(
+  guess = guess_word
+)
+
+translate_word('단근')
+#>[1] "carrot"
+```
+
+### How to use *kordle* on RShiny App
+
+![](C:/Users/Emilija/Desktop/r_dir/kordle/kordle/vignettes/overall.png)
+
+Although it is possible to get feedback on your guesses just by running the
+functions, the main way to use *kordle* is by using RShiny.
+
+The user can enter their guesses:
+
+![](C:/Users/Emilija/Desktop/r_dir/kordle/kordle/vignettes/guess.png)
+
+Until they get it right:
+
+![](C:/Users/Emilija/Desktop/r_dir/kordle/kordle/vignettes/correct.png)
+
+Or not:
+
+![](C:/Users/Emilija/Desktop/r_dir/kordle/kordle/vignettes/wrong.png)
+
+### End of the tutorial
